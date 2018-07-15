@@ -7,14 +7,21 @@ import (
 
 type Clipboard struct{}
 
+var fallback string
+
 func (_ *Clipboard) Copy(text string, _ *struct{}) error {
 	<-connCh
-	return clipboard.WriteAll(lemon.ConvertLineEnding(text, LineEndingOpt))
+	fallback = lemon.ConvertLineEnding(text, LineEndingOpt)
+	return clipboard.WriteAll(fallback)
 }
 
 func (_ *Clipboard) Paste(_ struct{}, resp *string) error {
 	<-connCh
 	t, err := clipboard.ReadAll()
-	*resp = t
+	if err != nil {
+		*resp = fallback
+	} else {
+		*resp = t
+	}
 	return err
 }
