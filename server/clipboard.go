@@ -1,6 +1,8 @@
 package server
 
 import (
+	"log"
+
 	"github.com/atotto/clipboard"
 	"github.com/pocke/lemonade/lemon"
 )
@@ -12,7 +14,11 @@ var fallback string
 func (_ *Clipboard) Copy(text string, _ *struct{}) error {
 	<-connCh
 	fallback = lemon.ConvertLineEnding(text, LineEndingOpt)
-	return clipboard.WriteAll(fallback)
+	err := clipboard.WriteAll(fallback)
+	if err != nil {
+		log.Printf("%v\n", err)
+	}
+	return nil
 }
 
 func (_ *Clipboard) Paste(_ struct{}, resp *string) error {
@@ -23,5 +29,5 @@ func (_ *Clipboard) Paste(_ struct{}, resp *string) error {
 	} else {
 		*resp = t
 	}
-	return err
+	return nil
 }
