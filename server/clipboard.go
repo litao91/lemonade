@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/atotto/clipboard"
-	"github.com/pocke/lemonade/lemon"
+	"github.com/lemonade-command/lemonade/lemon"
 )
 
 type Clipboard struct{}
